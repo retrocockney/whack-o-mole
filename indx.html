@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Whack a Mole</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f0f0f0;
+    }
+
+    h1 {
+      margin-top: 20px;
+    }
+
+    #score {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    #grid {
+      display: grid;
+      gap: 10px;
+      justify-content: center;
+      margin: 20px auto;
+    }
+
+    .hole {
+      width: 80px;
+      height: 80px;
+      background: brown;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .mole {
+      background: green;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Whack a Mole</h1>
+<div id="score">Score: 0</div>
+<div id="grid"></div>
+
+<script>
+let score = 0;
+let gridSize = 3;
+let moleIndex = -1;
+
+const grid = document.getElementById("grid");
+const scoreText = document.getElementById("score");
+
+function createGrid(size) {
+  grid.innerHTML = "";
+  grid.style.gridTemplateColumns = `repeat(${size}, 80px)`;
+
+  for (let i = 0; i < size * size; i++) {
+    const hole = document.createElement("div");
+    hole.classList.add("hole");
+
+    hole.addEventListener("click", () => {
+      if (i === moleIndex) {
+        score++;
+        scoreText.textContent = "Score: " + score;
+        moleIndex = -1;
+
+        if (score % 10 === 0) {
+          changeMap();
+        }
+      }
+    });
+
+    grid.appendChild(hole);
+  }
+}
+
+function showMole() {
+  const holes = document.querySelectorAll(".hole");
+  holes.forEach(hole => hole.classList.remove("mole"));
+
+  moleIndex = Math.floor(Math.random() * holes.length);
+  holes[moleIndex].classList.add("mole");
+}
+
+function changeMap() {
+  if (gridSize === 3) {
+    gridSize = 4;
+  } else if (gridSize === 4) {
+    gridSize = 5;
+  } else {
+    gridSize = 3;
+  }
+  createGrid(gridSize);
+}
+
+createGrid(gridSize);
+setInterval(showMole, 800);
+</script>
+
+</body>
+</html>
